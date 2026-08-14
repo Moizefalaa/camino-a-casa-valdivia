@@ -1,6 +1,8 @@
 # Modo Valdivia
 
-Juego web educativo para adolescentes (13–19 años) de Valdivia, Chile: aprenden a moverse de forma segura por su ciudad (rutas, hitos, micros, emergencias y evacuación) sobre el mapa real de OpenStreetMap. Colegio piloto: **INSAT Valdivia** (Domeyko 398).
+Juego web educativo para adolescentes (13–19 años) de Valdivia, Chile: aprenden a moverse de forma segura por su ciudad (rutas, hitos, micros, bici, emergencias y evacuación) sobre el mapa real de OpenStreetMap. Colegio piloto: **INSAT Valdivia** (Domeyko 398).
+
+**PWA instalable y offline:** tras la primera visita, un service worker guarda la app completa (y los tiles ya descargados) en el navegador: funciona sin internet y se instala con ícono desde el menú del navegador ("Instalar aplicación"). Ideal para los computadores del colegio.
 
 ## Cómo ejecutar
 
@@ -62,5 +64,6 @@ Sin cuentas, sin servidor, sin analítica. Todo (progreso, casa referencial, dir
 - [x] **8 misiones**: 4 guionizadas + "Llega a casa", "De noche sin micro", "Puente Calle-Calle al sur", "La ruta del turista" y "1960: evacuación" (arranca con alarma de tsunami real desde la plaza, 15 min de límite)
 - [x] **Desafío de la semana**: 5 variantes que rotan automáticamente por semana ISO (contrarreloj, sin un peso, a pie y a oscuras, sin brújula, partida sorpresa en un hito al azar), con card destacado en Misiones y estrellas propias
 - [x] Panel docente anónimo (sin servidor): cada estudiante exporta desde ⚙️ un código anónimo (`MV1 …`, sin nombre ni datos personales) y el docente los importa en ⚙️ → Panel docente (puerta con suma simple): métricas del curso (misiones, estrellas, quiz de emergencias, contactos, galería), tabla por ID anónimo, CSV descargable e informe imprimible
+- [x] **PWA**: manifest + íconos (`herramientas/generar-iconos.py`) + service worker (`sw.js`: precache del casco, tiles cache-first, resto network-first con respaldo offline). Instalable y funcional sin conexión tras la primera visita
 - [ ] Corredores referenciales de micro validados en terreno (tarea Fase 0 con INSAT)
 - [ ] Routing peatonal local propio (OSRM demo usa perfil auto; para offline total, servidor OSRM local — Fase 2)

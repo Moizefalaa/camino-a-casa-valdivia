@@ -1,0 +1,19 @@
+{
+  "name": "Modo Valdivia",
+  "short_name": "Modo Valdivia",
+  "description": "Juego educativo de autonomía urbana: aprende tu ruta por Valdivia, Chile. Misiones, micros, bici y emergencias.",
+  "lang": "es-CL",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f4f2",
+  "theme_color": "#2c6e8f",
+  "icons": [
+    { "src": "iconos/icono.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "iconos/icono-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "iconos/icono-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "iconos/icono-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

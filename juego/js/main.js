@@ -215,4 +215,8 @@ const UI = (() => {
   Despachador.configurar(Estado.perfil);
   UI.pintarProgresoInicio();
   Despachador.decir(MENSAJES_RADIO.bienvenida);
+
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  }
 })();
