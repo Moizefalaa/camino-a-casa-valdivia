@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto-test · Modo Valdivia (piloto)</title>
+<style>
+  :root { --ok:#3d8b5f; --mal:#c0524f; --tinta:#1a2b3c; }
+  * { box-sizing:border-box; }
+  body { font-family: Consolas, "Segoe UI", monospace; background:#f4f4f2; color:var(--tinta); margin:0; padding:24px; }
+  .caja { max-width:720px; margin:0 auto; background:#fff; border:1px solid #d8d8d3; border-radius:10px; padding:20px; }
+  h1 { font-size:18px; margin:0 0 2px; }
+  .sub { color:#889; font-size:12px; margin-bottom:14px; }
+  .res { padding:6px 10px; border-radius:6px; margin:4px 0; font-size:12.5px; }
+  .ok { background:#eaf6ef; color:var(--ok); }
+  .mal { background:#faeaea; color:var(--mal); font-weight:700; }
+  .final { margin-top:14px; font-size:15px; font-weight:800; padding:10px; border-radius:8px; text-align:center; }
+</style>
+</head>
+<body>
+<div class="caja">
+  <h1>Auto-test del piloto · Modo Valdivia</h1>
+  <div class="sub">Ábrelo antes de la clase: verifica que los datos del juego estén íntegros. Si algo falla en rojo, revisa esa parte antes de la sesión.</div>
+  <div id="salida"></div>
+  <div id="final" class="final"></div>
+</div>
+
+<script src="js/datos/hitos.js"></script>
+<script src="js/datos/micros.js"></script>
+<script src="js/datos/evacuacion.js"></script>
+<script src="js/datos/misiones.js"></script>
+<script src="js/datos/emergencias.js"></script>
+<script src="js/datos/galeria.js"></script>
+<script src="js/datos/evaluacion.js"></script>
+<script>
+(() => {
+  const out = document.getElementById("salida");
+  const fin = document.getElementById("final");
+  let ok = 0, mal = 0;
+  function t(cond, nombre) {
+    const d = document.createElement("div");
+    d.className = cond ? "ok" : "mal";
+    d.textContent = (cond ? "✓ " : "✗ FALLO · ") + nombre;
+    out.appendChild(d);
+    cond ? ok++ : mal++;
+  }
+  const BBOX = { latMin: -39.90, latMax: -39.78, lonMin: -73.30, lonMax: -73.19 };
+  const enCaja = c => c && c.length === 2 && c[0] >= BBOX.latMin && c[0] <= BBOX.latMax && c[1] >= BBOX.lonMin && c[1] <= BBOX.lonMax;
+
+  t(typeof HITOS !== "undefined" && HITOS.length >= 12, "Hitos: " + (typeof HITOS !== "undefined" ? HITOS.length : "?") + " (≥12)");
+  t(typeof HITOS !== "undefined" && HITOS.every(h => enCaja(h.coords)), "Hitos: coordenadas dentro del área de Valdivia");
+  t(typeof HITOS !== "undefined" && HITOS.some(h => h.id === "insat"), "Hito de partida INSAT presente");
+
+  t(typeof MICROS !== "undefined" && MICROS.length >= 5, "Micros: " + (typeof MICROS !== "undefined" ? MICROS.length : "?") + " líneas (≥5)");
+  t(typeof MICROS !== "undefined" && MICROS.every(m => m.paradas && m.paradas.length >= 4 && m.paradas.every(p => enCaja(p.coords))), "Micros: todas con ≥4 paradas dentro del área");
+  t(typeof MICROS !== "undefined" && MICROS.some(m => m.ref === "20"), "Línea 20 real (Niebla⇄Valdivia) presente");
+
+  t(typeof MISIONES !== "undefined" && MISIONES.length === 8, "Misiones: " + (typeof MISIONES !== "undefined" ? MISIONES.length : "?") + " (8)");
+  t(typeof MISIONES !== "undefined" && MISIONES.some(m => m.id === "m8-evacuacion" && m.eventoInicial === "tsunami"), "Misión de evacuación con alarma inicial");
+  t(typeof DESAFIOS_SEMANALES !== "undefined" && DESAFIOS_SEMANALES.length === 5, "Desafíos semanales: " + (typeof DESAFIOS_SEMANALES !== "undefined" ? DESAFIOS_SEMANALES.length : "?") + " (5)");
+  t(typeof EVENTOS !== "undefined" && EVENTOS.length >= 17, "Eventos de seguridad: " + (typeof EVENTOS !== "undefined" ? EVENTOS.length : "?") + " (≥17)");
+  t(typeof EVENTOS !== "undefined" && EVENTOS.every(e => e.opciones.some(o => o.correcta) && e.opciones.length >= 3), "Eventos: todos con 3+ opciones y una correcta");
+  t(typeof EVENTOS !== "undefined" && EVENTOS.filter(e => e.solo === "bici").length >= 2, "Eventos exclusivos de bici: " + (typeof EVENTOS !== "undefined" ? EVENTOS.filter(e => e.solo === "bici").length : "?") + " (≥2)");
+
+  t(typeof EVACUACION !== "undefined" && EVACUACION.inundacion.length >= 1 && EVACUACION.zonasAltas.length >= 4 && EVACUACION.rutas.length >= 3, "Evacuación: zona de inundación + " + (typeof EVACUACION !== "undefined" ? EVACUACION.zonasAltas.length : "?") + " zonas altas + rutas");
+
+  t(typeof SECTORES_CASA !== "undefined" && SECTORES_CASA.length === 8, "Sectores de casa: " + (typeof SECTORES_CASA !== "undefined" ? SECTORES_CASA.length : "?") + " (8)");
+
+  t(typeof ESCENARIOS_EMERGENCIA !== "undefined" && ESCENARIOS_EMERGENCIA.length >= 8, "Escenarios ¿A quién llamo?: " + (typeof ESCENARIOS_EMERGENCIA !== "undefined" ? ESCENARIOS_EMERGENCIA.length : "?") + " (≥8)");
+  t(typeof PROTOCOLOS !== "undefined" && PROTOCOLOS.length === 4, "Protocolos: " + (typeof PROTOCOLOS !== "undefined" ? PROTOCOLOS.length : "?") + " (4)");
+  t(typeof GALERIA_PIEZAS !== "undefined" && GALERIA_PIEZAS.length === 8, "Galería cultural: " + (typeof GALERIA_PIEZAS !== "undefined" ? GALERIA_PIEZAS.length : "?") + " (8)");
+  t(typeof PREGUNTAS_EVAL !== "undefined" && PREGUNTAS_EVAL.length === 10, "Evaluación pre/post: " + (typeof PREGUNTAS_EVAL !== "undefined" ? PREGUNTAS_EVAL.length : "?") + " preguntas (10)");
+  t(typeof PREGUNTAS_EVAL !== "undefined" && PREGUNTAS_EVAL.every(q => q.correcta >= 0 && q.correcta < q.opciones.length), "Evaluación: índices de respuesta correcta válidos");
+
+  fetch("index.html").then(r => r.text()).then(html => {
+    const ids = ["pantalla-inicio","pantalla-mapa","pantalla-datos","pantalla-ajustes","pantalla-panel","hud-mision","panel-misiones","narrador","modal-fondo","btn-eval","btn-exportar","btn-panel-doc"];
+    ids.forEach(id => t(html.includes('id="' + id + '"'), "Pantalla/elemento presente: #" + id));
+    const scripts = ["evaluacion.js","panel-docente.js","sw.js"].map(s => "js/" + s);
+    t(scripts.every(s => html.includes(s) || s === "sw.js"), "Scripts nuevos incluidos en index.html");
+    t(html.includes("manifest.webmanifest"), "Manifest PWA enlazado");
+    finlas();
+  }).catch(() => { t(false, "No se pudo leer index.html (¿servidor local activo?)"); finlas(); });
+
+  function finlas() {
+    fin.textContent = mal === 0 ? "✅ TODO OK (" + ok + " pruebas) — listo para el piloto" : "❌ " + mal + " FALLOS de " + (ok + mal) + " — revisar antes de la sesión";
+    fin.style.background = mal === 0 ? "#eaf6ef" : "#faeaea";
+    fin.style.color = mal === 0 ? "var(--ok)" : "var(--mal)";
+  }
+})();
+</script>
+</body>
+</html>

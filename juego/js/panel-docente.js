@@ -124,7 +124,7 @@ const PanelDocente = (() => {
     const lista = Object.values(alumnos());
     const n = lista.length;
     if (!n) return null;
-    let misiones = 0, estrellas = 0, galeria = 0, emerg = 0, contactos = 0;
+    let misiones = 0, estrellas = 0, galeria = 0, emerg = 0, contactos = 0, pre = 0, post = 0, nPre = 0, nPost = 0;
     lista.forEach(a => {
       const m = a.progreso.misiones || {};
       misiones += Object.keys(m).length;
@@ -132,10 +132,13 @@ const PanelDocente = (() => {
       galeria += a.progreso.galeria || 0;
       emerg += a.progreso.datosMax || 0;
       contactos += a.progreso.contactosMax || 0;
+      if (a.progreso.evalPre) { pre += a.progreso.evalPre.puntaje; nPre++; }
+      if (a.progreso.evalPost) { post += a.progreso.evalPost.puntaje; nPost++; }
     });
     return {
       n, misiones, estrellas,
       galeriaAvg: galeria / n, emergAvg: emerg / n, contactosAvg: contactos / n,
+      preAvg: nPre ? pre / nPre : null, nPre, postAvg: nPost ? post / nPost : null, nPost,
       lista: lista.slice().sort((a, b) => (a.id < b.id ? -1 : 1))
     };
   }
@@ -163,14 +166,17 @@ const PanelDocente = (() => {
         <div class="tarjeta-res"><div class="num">${Math.round(met.emergAvg)}%</div><div class="eti">quiz emergencias (prom.)</div></div>
         <div class="tarjeta-res"><div class="num">${Math.round(met.contactosAvg)}%</div><div class="eti">contactos de memoria (prom.)</div></div>
         <div class="tarjeta-res"><div class="num">${(met.galeriaAvg).toFixed(1)}/8</div><div class="eti">galería cultural (prom.)</div></div>
+        <div class="tarjeta-res"><div class="num">${met.preAvg === null ? "—" : Math.round(met.preAvg) + "%"}</div><div class="eti">eval. inicial (${met.nPre})</div></div>
+        <div class="tarjeta-res"><div class="num">${met.postAvg === null ? "—" : Math.round(met.postAvg) + "%"}</div><div class="eti">eval. final (${met.nPost})</div></div>
+        <div class="tarjeta-res"><div class="num">${met.preAvg === null || met.postAvg === null ? "—" : (met.postAvg - met.preAvg >= 0 ? "+" : "") + Math.round(met.postAvg - met.preAvg) + "%"}</div><div class="eti">avance pre→post</div></div>
       </div>
       <table>
-        <thead><tr><th>ID</th><th>Nivel</th><th>Misiones</th><th>★</th><th>Emerg. %</th><th>Contactos %</th><th>Galería</th></tr></thead>
+        <thead><tr><th>ID</th><th>Nivel</th><th>Misiones</th><th>★</th><th>Emerg. %</th><th>Contactos %</th><th>Galería</th><th>Pre %</th><th>Post %</th></tr></thead>
         <tbody>
           ${met.lista.map(a => {
             const m = a.progreso.misiones || {};
             const est = Object.values(m).reduce((s, x) => s + (x.estrellas || 0), 0);
-            return `<tr><td>${a.id}</td><td>${a.nivel || 1}</td><td>${Object.keys(m).length}/5</td><td>${est}</td><td>${a.progreso.datosMax || 0}</td><td>${a.progreso.contactosMax || 0}</td><td>${a.progreso.galeria || 0}/8</td></tr>`;
+            return `<tr><td>${a.id}</td><td>${a.nivel || 1}</td><td>${Object.keys(m).length}/5</td><td>${est}</td><td>${a.progreso.datosMax || 0}</td><td>${a.progreso.contactosMax || 0}</td><td>${a.progreso.galeria || 0}/8</td><td>${a.progreso.evalPre ? a.progreso.evalPre.puntaje : "—"}</td><td>${a.progreso.evalPost ? a.progreso.evalPost.puntaje : "—"}</td></tr>`;
           }).join("")}
         </tbody>
       </table>
@@ -180,11 +186,12 @@ const PanelDocente = (() => {
   function csv() {
     const met = metricas();
     if (!met) return;
-    const filas = [["id", "nivel", "misiones", "estrellas", "emergencias_pct", "contactos_pct", "galeria"]];
+    const filas = [["id", "nivel", "misiones", "estrellas", "emergencias_pct", "contactos_pct", "galeria", "eval_pre_pct", "eval_post_pct"]];
     met.lista.forEach(a => {
       const m = a.progreso.misiones || {};
       const est = Object.values(m).reduce((s, x) => s + (x.estrellas || 0), 0);
-      filas.push([a.id, a.nivel || 1, Object.keys(m).length, est, a.progreso.datosMax || 0, a.progreso.contactosMax || 0, a.progreso.galeria || 0]);
+      filas.push([a.id, a.nivel || 1, Object.keys(m).length, est, a.progreso.datosMax || 0, a.progreso.contactosMax || 0, a.progreso.galeria || 0,
+        a.progreso.evalPre ? a.progreso.evalPre.puntaje : "", a.progreso.evalPost ? a.progreso.evalPost.puntaje : ""]);
     });
     const contenido = filas.map(f => f.join(",")).join("\n");
     const a = document.createElement("a");
@@ -219,12 +226,15 @@ const PanelDocente = (() => {
         <div class="c"><b>${Math.round(met.emergAvg)}%</b><span>quiz emergencias (prom.)</span></div>
         <div class="c"><b>${Math.round(met.contactosAvg)}%</b><span>contactos de memoria (prom.)</span></div>
         <div class="c"><b>${met.galeriaAvg.toFixed(1)}/8</b><span>galería cultural (prom.)</span></div>
+        <div class="c"><b>${met.preAvg === null ? "—" : Math.round(met.preAvg) + "% (" + met.nPre + ")"}</b><span>evaluación inicial</span></div>
+        <div class="c"><b>${met.postAvg === null ? "—" : Math.round(met.postAvg) + "% (" + met.nPost + ")"}</b><span>evaluación final</span></div>
+        <div class="c"><b>${met.preAvg === null || met.postAvg === null ? "—" : (met.postAvg - met.preAvg >= 0 ? "+" : "") + Math.round(met.postAvg - met.preAvg) + "%"}</b><span>avance pre→post</span></div>
       </div>
-      <table><tr><th>ID</th><th>Nivel</th><th>Misiones</th><th>★</th><th>Emerg. %</th><th>Contactos %</th><th>Galería</th></tr>
+      <table><tr><th>ID</th><th>Nivel</th><th>Misiones</th><th>★</th><th>Emerg. %</th><th>Contactos %</th><th>Galería</th><th>Pre %</th><th>Post %</th></tr>
       ${met.lista.map(a => {
         const m = a.progreso.misiones || {};
         const est = Object.values(m).reduce((s, x) => s + (x.estrellas || 0), 0);
-        return `<tr><td>${a.id}</td><td>${a.nivel || 1}</td><td>${Object.keys(m).length}/5</td><td>${est}</td><td>${a.progreso.datosMax || 0}</td><td>${a.progreso.contactosMax || 0}</td><td>${a.progreso.galeria || 0}/8</td></tr>`;
+        return `<tr><td>${a.id}</td><td>${a.nivel || 1}</td><td>${Object.keys(m).length}/5</td><td>${est}</td><td>${a.progreso.datosMax || 0}</td><td>${a.progreso.contactosMax || 0}</td><td>${a.progreso.galeria || 0}/8</td><td>${a.progreso.evalPre ? a.progreso.evalPre.puntaje : "—"}</td><td>${a.progreso.evalPost ? a.progreso.evalPost.puntaje : "—"}</td></tr>`;
       }).join("")}
       </table>
       <script>window.print()<\/script>
