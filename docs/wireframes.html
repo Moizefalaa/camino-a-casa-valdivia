@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modo Valdivia — Wireframes v0.1</title>
+<style>
+  :root {
+    --bg: #f4f4f2;
+    --ink: #1a2b3c;
+    --blue: #2c6e8f;
+    --river: #7fb3c8;
+    --accent: #d97b3f;
+    --safe: #3d8b5f;
+    --line: #d8d8d3;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #e8e8e4; color: var(--ink); padding: 24px; }
+  h1 { font-size: 20px; margin-bottom: 4px; }
+  .sub { color: #667; font-size: 13px; margin-bottom: 20px; }
+  .grid { display: flex; flex-wrap: wrap; gap: 28px; }
+  .screen { background: #fff; border: 1px solid var(--line); border-radius: 8px; width: 360px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .screen h2 { font-size: 13px; padding: 10px 14px; background: var(--ink); color: #fff; letter-spacing: .4px; }
+  .frame { height: 620px; position: relative; background: var(--bg); overflow: hidden; }
+  .note { font-size: 11px; color: #889; padding: 8px 14px; border-top: 1px dashed var(--line); }
+  .btn { display: block; width: 88%; margin: 10px auto; padding: 14px; border-radius: 8px; border: none; font-size: 15px; font-weight: 600; text-align: center; }
+  .btn.primary { background: var(--blue); color: #fff; }
+  .btn.secondary { background: #fff; color: var(--ink); border: 2px solid var(--ink); }
+  .btn.accent { background: var(--accent); color: #fff; }
+  .map-bg { position: absolute; inset: 0; background:
+    linear-gradient(#e9eee9 0 100%); }
+  .river { position: absolute; background: var(--river); border-radius: 40%; }
+  .street { position: absolute; background: #cfcfc9; }
+  .pin { position: absolute; width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; }
+  .pin span { transform: rotate(45deg); font-size: 12px; }
+  .topbar { position: absolute; top: 0; left: 0; right: 0; background: #fff; border-bottom: 1px solid var(--line); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; z-index: 5; }
+  .bottombar { position: absolute; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid var(--line); z-index: 5; }
+  .radio { background: #223; color: #cde; font-size: 12px; padding: 8px 12px; display: flex; gap: 8px; align-items: center; }
+  .radio b { color: var(--accent); }
+  .dot { width: 8px; height: 8px; background: #e33; border-radius: 50%; animation: blink 1s infinite alternate; }
+  @keyframes blink { to { opacity: .3; } }
+  .card { position: absolute; left: 12px; right: 12px; bottom: 70px; background: #fff; border-radius: 10px; padding: 14px; box-shadow: 0 4px 14px rgba(0,0,0,.18); z-index: 6; }
+  .chip { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; background: #eef; margin: 2px; }
+  .hud { position: absolute; top: 56px; left: 12px; z-index: 5; background: #fff; border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,.12); }
+  .evac { position: absolute; inset: 0; z-index: 4; }
+  .evac .zone { position: absolute; border: 2px dashed var(--safe); background: rgba(61,139,95,.12); }
+  .arrow { position: absolute; color: var(--safe); font-size: 22px; font-weight: 900; }
+  .list { padding: 12px; }
+  .item { display: flex; gap: 10px; padding: 10px; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .item .ic { width: 36px; height: 36px; background: #eef; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .stars { color: #e9b32a; letter-spacing: 2px; }
+  .big { font-size: 42px; text-align: center; margin: 18px 0 6px; }
+  .center { text-align: center; }
+  .kv { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 14px; border-bottom: 1px solid var(--line); }
+  .answer { display: block; width: 100%; text-align: left; padding: 12px 14px; margin: 6px 0; border: 1.5px solid var(--line); border-radius: 8px; background: #fff; font-size: 13px; }
+  .answer.ok { border-color: var(--safe); background: #eaf6ef; }
+  .answer.bad { border-color: #c55; background: #faeaea; }
+</style>
+</head>
+<body>
+<h1>Modo Valdivia — Wireframes baja fidelidad</h1>
+<p class="sub">v0.1 · Estética minimalista tipo mapa · Narrador: Despachador Radio Estuario · 13–19 años</p>
+
+<div class="grid">
+
+<!-- ============ 1. INICIO ============ -->
+<div class="screen">
+  <h2>1 · INICIO</h2>
+  <div class="frame">
+    <div style="text-align:center; padding:40px 20px 10px;">
+      <div style="font-size:40px;">🌉</div>
+      <div style="font-size:24px; font-weight:800; letter-spacing:1px;">MODO VALDIVIA</div>
+      <div style="font-size:12px; color:#889;">Aprende tu ruta. Conoce tu ciudad.</div>
+    </div>
+    <button class="btn primary">🗺️ Explora Valdivia</button>
+    <button class="btn accent">🎯 Misiones</button>
+    <button class="btn secondary">📞 Mis Datos Seguros</button>
+    <button class="btn secondary">⚙️ Ajustes</button>
+    <div style="position:absolute; bottom:12px; width:100%; text-align:center;">
+      <span class="chip">⭐ 12</span><span class="chip">🏅 Evacuador</span><span class="chip">🏺 3/8 Galería</span>
+    </div>
+  </div>
+  <div class="note">3 modos principales + ajustes. Barra inferior: progreso del jugador. Sin login.</div>
+</div>
+
+<!-- ============ 2. EXPLORAR ============ -->
+<div class="screen">
+  <h2>2 · EXPLORA VALDIVIA (mapa libre)</h2>
+  <div class="frame">
+    <div class="topbar">
+      <b>←</b> <span style="font-size:13px;">Explora</span>
+      <span style="font-size:12px;">🔎 capas: <u>Evacuación</u> · <u>Micros</u></span>
+    </div>
+    <div class="map-bg"></div>
+    <div class="river" style="width:300px; height:70px; top:180px; left:-60px; transform:rotate(-15deg);"></div>
+    <div class="river" style="width:200px; height:50px; top:300px; right:-50px; transform:rotate(25deg);"></div>
+    <div class="street" style="width:100%; height:8px; top:240px;"></div>
+    <div class="street" style="width:8px; height:100%; left:170px;"></div>
+    <!-- pins -->
+    <div class="pin" style="background:#2c6e8f; top:120px; left:200px;"><span>🏫</span></div>
+    <div class="pin" style="background:#d97b3f; top:190px; left:120px;"><span>🏛️</span></div>
+    <div class="pin" style="background:#d97b3f; top:210px; left:250px;"><span>⛪</span></div>
+    <div class="pin" style="background:#3d8b5f; top:330px; left:90px;"><span>🌉</span></div>
+    <div class="card">
+      <div style="font-size:12px; color:#889;">HITO · Centro</div>
+      <div style="font-weight:700; margin:2px 0;">INSAT Valdivia</div>
+      <div style="font-size:12px;">Domeyko 398. Tu punto de partida. Liceo técnico profesional: Administración, Turismo y Conectividad.</div>
+      <button class="btn primary" style="margin:10px 0 0; padding:8px;">OK</button>
+    </div>
+  </div>
+  <div class="note">Mapa OSM real. Pines: azul=partida, naranja=hitos urbanos, verde=naturaleza/agua. Tocar pin → ficha. Capas activables arriba.</div>
+</div>
+
+<!-- ============ 3. CAPA EVACUACIÓN ============ -->
+<div class="screen">
+  <h2>2b · CAPA EVACUACIÓN TSUNAMI</h2>
+  <div class="frame">
+    <div class="topbar"><b>←</b><span style="font-size:13px;">Explora · capa activa: Evacuación</span><span style="color:#3d8b5f; font-size:12px;">● ON</span></div>
+    <div class="map-bg"></div>
+    <!-- flooded zone -->
+    <div style="position:absolute; bottom:0; left:0; right:0; height:180px; background:rgba(127,179,200,.35); border-top:3px solid #2c6e8f;"></div>
+    <div style="position:absolute; bottom:150px; left:10px; font-size:11px; color:#2c6e8f; font-weight:700;">▦ zona de inundación (baja)</div>
+    <!-- safe zones -->
+    <div class="evac">
+      <div class="zone" style="top:40px; left:20px; width:130px; height:80px;"></div>
+      <div style="position:absolute; top:50px; left:35px; font-size:11px; color:#3d8b5f; font-weight:700;">▲ ZONA ALTA segura</div>
+      <div class="zone" style="top:150px; right:30px; width:110px; height:70px;"></div>
+      <div style="position:absolute; top:160px; right:45px; font-size:11px; color:#3d8b5f; font-weight:700;">▲ Isla Teja alta</div>
+      <!-- arrows -->
+      <div class="arrow" style="bottom:160px; left:80px;">↑</div>
+      <div class="arrow" style="bottom:130px; left:140px;">↗</div>
+      <div class="arrow" style="bottom:100px; right:110px;">↑</div>
+    </div>
+    <div class="card" style="bottom:12px;">
+      <div style="font-size:12px;"><b style="color:#3d8b5f;">DESPACHADOR:</b> "Si suena la alarma, no corras al río: sube. Recuerda 1960, el terremoto más grande de la historia… acá se evacúa hacia arriba."</div>
+    </div>
+  </div>
+  <div class="note">Capa SHOA simplificada: zona de inundación en azul, zonas altas verdes, flechas = rutas de evacuación. Despachador contextual.</div>
+</div>
+
+<!-- ============ 4. MISIÓN ACTIVA ============ -->
+<div class="screen">
+  <h2>3 · MISIÓN ACTIVA (Nivel 1)</h2>
+  <div class="frame">
+    <div class="topbar">
+      <b style="color:#c55;">✕</b>
+      <span style="font-size:13px;">Misión: <b>Llega a casa</b></span>
+      <span style="font-size:12px;">⏱ 17:42</span>
+    </div>
+    <div class="map-bg"></div>
+    <div class="river" style="width:300px; height:70px; top:200px; left:-60px; transform:rotate(-15deg);"></div>
+    <div class="hud">
+      🕐 <b>18:30</b> límite<br>
+      🎫 saldo: <b>$1.200</b><br>
+      🔋 batería: <b>62%</b>
+    </div>
+    <div class="pin" style="background:#2c6e8f; top:110px; left:190px;"><span>🏫</span></div>
+    <div class="pin" style="background:#e33; top:340px; left:70px;"><span>🏠</span></div>
+    <div class="pin" style="background:var(--ink); top:230px; left:210px; width:34px; height:34px;"><span>🚶</span></div>
+    <!-- decision card -->
+    <div class="card">
+      <div style="font-size:12px; color:#889;">INTERSECCIÓN · Chacabuco / Yungay</div>
+      <div style="font-size:12px; margin:4px 0 8px;">¿Hacia dónde sigues?</div>
+      <button class="answer">⬆️ Por Yungay — se ve la torre de la catedral al fondo</button>
+      <button class="answer ok">⬅️ Por Chacabuco hacia la costanera <span style="float:right; color:#3d8b5f;">✓ ruta</span></button>
+      <button class="answer">🚌 Tomar la micro en paradero (gasta saldo)</button>
+    </div>
+  </div>
+  <div class="note">En Nivel 1 hay mini-mapa y flechas. En Nivel 2: sin mini-mapa, HUD con tiempo/saldo/batería. Opciones describen lo que se VE (orientación por referencias).</div>
+</div>
+
+<!-- ============ 5. EVENTO ============ -->
+<div class="screen">
+  <h2>3b · EVENTO DURANTE MISIÓN</h2>
+  <div class="frame">
+    <div class="topbar"><b style="color:#c55;">✕</b><span style="font-size:13px;">Misión: Llega a casa</span><span style="font-size:12px;">⏱ 18:07</span></div>
+    <div class="map-bg" style="filter:brightness(.55);"></div>
+    <div style="position:absolute; inset:0; background:rgba(10,20,40,.5);"></div>
+    <!-- modal -->
+    <div style="position:absolute; left:16px; right:16px; top:140px; background:#fff; border-radius:12px; padding:16px; z-index:9; border-top:6px solid #e9b32a;">
+      <div style="font-size:11px; color:#a80; font-weight:800; letter-spacing:1px;">⚠ EVENTO</div>
+      <div style="font-weight:700; margin:6px 0;">Terremoto fuerte</div>
+      <div style="font-size:13px; color:#556;">El suelo tiembla mientras cruzas cerca del puente. La gente empieza a moverse hacia la colina.</div>
+      <button class="answer" style="margin-top:10px;">Correr de vuelta a casa (zona baja)</button>
+      <button class="answer ok">Seguir la señalización ↑ hacia terreno alto</button>
+      <button class="answer">Quedarse quieto bajo el puente</button>
+    </div>
+  </div>
+  <div class="note">Modal pausa la misión. Opciones con consecuencias explicadas después. Tono tranquilo, empoderador.</div>
+</div>
+
+<!-- ============ 6. RESULTADO ============ -->
+<div class="screen">
+  <h2>4 · RESULTADO DE MISIÓN</h2>
+  <div class="frame">
+    <div class="big">🏠</div>
+    <div style="text-align:center; font-weight:800; font-size:18px;">¡Llegaste a casa!</div>
+    <div class="center stars" style="margin:8px 0;">★★★</div>
+    <div class="kv"><span>Llegada</span><b>18:21 ✅ (antes del límite)</b></div>
+    <div class="kv"><span>Decisiones seguras</span><b>4/4</b></div>
+    <div class="kv"><span>Ayudas usadas</span><b>0</b></div>
+    <div class="kv"><span>Desbloqueado</span><b>🏺 Huaco Valdivia n°4</b></div>
+    <div class="card" style="position:static; margin:14px 12px; box-shadow:none; border:1px solid var(--line);">
+      <div style="font-size:12px;"><b style="color:#3d8b5f;">DESPACHADOR:</b> "Ruta limpia, sin apuros ni sustos. Así se llega a casa, crack."</div>
+    </div>
+    <button class="btn primary">Repetir sin ayudas ⭐</button>
+    <button class="btn secondary">Siguiente misión →</button>
+  </div>
+  <div class="note">Estrellas: eficiencia / seguridad / sin ayudas. Recompensa cultural (Galería Valdivia). Frase del despachador según desempeño.</div>
+</div>
+
+<!-- ============ 7. MIS DATOS ============ -->
+<div class="screen">
+  <h2>5 · MIS DATOS SEGUROS</h2>
+  <div class="frame">
+    <div class="topbar"><b>←</b><span style="font-size:13px;">Mis Datos Seguros</span><span style="font-size:12px; color:#889;">🔒 local</span></div>
+    <div class="list">
+      <div class="item"><div class="ic">📮</div><div><b>Arma tu dirección</b><br>Recuerda calle, número y barrio</div></div>
+      <div class="item"><div class="ic">🚨</div><div><b>¿A quién llamo?</b><br>131 · 133 · 134 · 147 · 112</div></div>
+      <div class="item"><div class="ic">🃏</div><div><b>Tarjetas de memoria</b><br>Parea tus contactos con sus números</div></div>
+      <div class="item"><div class="ic">📋</div><div><b>Protocolos</b><br>Me perdí / sin batería / terremoto</div></div>
+    </div>
+    <!-- mini quiz preview -->
+    <div class="card" style="bottom:12px;">
+      <div style="font-size:12px; color:#889; margin-bottom:6px;">MINIJUEGO · ¿A quién llamo?</div>
+      <div style="font-size:13px; margin-bottom:8px;">Ves a alguien tirado en la vereda, no responde. ¿A quién llamas?</div>
+      <button class="answer bad">134 Bomberos ✗</button>
+      <button class="answer ok">131 SAMU ✓</button>
+    </div>
+  </div>
+  <div class="note">4 minijuegos. Datos sensibles solo en el dispositivo (localStorage). Retroalimentación inmediata y explicada.</div>
+</div>
+
+<!-- ============ 8. AJUSTES / PERFIL ============ -->
+<div class="screen">
+  <h2>6 · AJUSTES Y PERFIL</h2>
+  <div class="frame">
+    <div class="topbar"><b>←</b><span style="font-size:13px;">Ajustes</span></div>
+    <div class="kv"><span>Nivel</span><b>Nivel 1 (13–15)</b></div>
+    <div class="kv"><span>Colegio</span><b>INSAT · Domeyko 398</b></div>
+    <div class="kv"><span>Mi casa (referencial)</span><b>✎ Picarte / Los Robles</b></div>
+    <div class="kv"><span>Radio Estuario</span><b>🔊 Encendida</b></div>
+    <div class="kv"><span>Modo offline</span><b>Descargar mapa 📥</b></div>
+    <div class="kv"><span>Mis contactos</span><b>🔒 2 guardados</b></div>
+    <div style="padding:14px;">
+      <button class="btn secondary" style="margin:0;">🖨️ Certificado Autonomía Urbana</button>
+      <div style="font-size:11px; color:#889; margin-top:10px;">🔒 Todo se guarda solo en este dispositivo. Sin cuentas, sin internet, sin datos enviados.</div>
+    </div>
+  </div>
+  <div class="note">Casa = punto referencial (intersección), nunca dirección exacta. Botón de descarga offline para computadores del colegio.</div>
+</div>
+
+</div>
+<p class="sub" style="margin-top:24px;">Flujo: Inicio → (Explora | Misiones → Mapa → Evento → Resultado | Mis Datos) · 8 pantallas núcleo, estética minimalista, voz del Despachador en barras "radio".</p>
+</body>
+</html>

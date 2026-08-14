@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<title>Guía docente · Modo Valdivia</title>
+<style>
+  :root { --tinta:#1a2b3c; --azul:#2c6e8f; --oro:#b8860b; }
+  * { box-sizing:border-box; }
+  body { font-family:"Segoe UI", Georgia, serif; color:var(--tinta); margin:0; background:#f4f4f2; }
+  .hoja { max-width:760px; margin:0 auto; background:#fff; padding:48px 56px; }
+  h1 { font-size:26px; margin:0 0 2px; }
+  h2 { font-size:17px; margin:28px 0 8px; color:var(--azul); border-bottom:2px solid var(--azul); padding-bottom:3px; }
+  h3 { font-size:14px; margin:16px 0 4px; }
+  p, li, td { font-size:13.5px; line-height:1.5; }
+  .sub { color:#667; font-size:13px; }
+  table { border-collapse:collapse; width:100%; margin:8px 0; }
+  td, th { border:1px solid #ccc; padding:6px 8px; font-size:12.5px; text-align:left; vertical-align:top; }
+  th { background:#eef3f6; }
+  .caja { background:#f4f8fa; border-left:4px solid var(--azul); padding:10px 14px; margin:10px 0; font-size:13px; }
+  .prot { background:#fdf6e8; border-left:4px solid var(--oro); }
+  ol li, ul li { margin:3px 0; }
+  @media print {
+    body { background:#fff; }
+    .hoja { padding:10mm 12mm; max-width:none; }
+    h2 { page-break-after:avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="hoja">
+
+<h1>Modo Valdivia · Guía docente</h1>
+<p class="sub">Juego web educativo de autonomía urbana y seguridad · Piloto: INSAT Valdivia (Domeyko 398) · Enseñanza media, 13–19 años</p>
+
+<h2>1. Qué es</h2>
+<p><b>Modo Valdivia</b> es un juego que corre en el navegador (sin instalación) sobre el mapa real de Valdivia (OpenStreetMap). Los estudiantes recorren la ciudad, cumplen misiones de desplazamiento (colegio → casa, centro, Isla Teja), toman decisiones en cruces, viajan en micro con saldo, enfrentan eventos de seguridad (terremoto, tsunami, desconocidos, sin batería) y practican sus datos de emergencia. Una cisne despachadora, <b>Cuelli</b> (Radio Estuario), narra con tono cercano.</p>
+
+<h2>2. Objetivos pedagógicos</h2>
+<ul>
+  <li>Construir un <b>mapa mental</b> del trayecto colegio–casa basado en hitos (plaza, puentes, torres, ríos).</li>
+  <li>Tomar decisiones de movilidad segura: ruta, cruce, micro, horario, noche.</li>
+  <li>Memorizar datos clave: dirección propia, contactos y números 131 · 133 · 134 · 147 · 112.</li>
+  <li>Interiorizar el protocolo local de <b>evacuación a terreno alto</b> (contexto: terremoto y tsunami de 1960).</li>
+</ul>
+
+<h2>3. Requisitos técnicos</h2>
+<table>
+  <tr><th>Ítem</th><th>Detalle</th></tr>
+  <tr><td>Navegador</td><td>Chrome, Edge o Firefox actualizado (computador o celular)</td></tr>
+  <tr><td>Internet</td><td>Solo para los tiles del mapa la primera vez. Con los tiles descargados (<code>python herramientas/descargar-tiles.py</code>), el mapa funciona offline. Las rutas por calles reales (OSRM) necesitan internet; sin él, el juego usa rutas simplificadas.</td></tr>
+  <tr><td>Datos personales</td><td>Ninguno sale del dispositivo: todo se guarda en localStorage. Sin cuentas ni servidores.</td></tr>
+</table>
+
+<h2>4. Estructura sugerida de sesión (50 min)</h2>
+<table>
+  <tr><th>Momento</th><th>Tiempo</th><th>Actividad</th></tr>
+  <tr><td>Inicio</td><td>10'</td><td>Pregunta activadora: “¿Quién puede explicar, sin celular, cómo llegar de INSAT a su casa?” Introducir la idea de <i>hitos</i> vs. GPS.</td></tr>
+  <tr><td>Configuración</td><td>5'</td><td>Cada estudiante configura en ⚙️ su nivel, su casa (punto referencial del barrio) y juega “Arma tu dirección”.</td></tr>
+  <tr><td>Juego guiado</td><td>25'</td><td>Misiones 1 a 3 (Explorar → plaza → mercado → Isla Teja). Alternativa por nivel: N1 misiones 1–2; N2 misiones 4–5 (casa propia y nocturna).</td></tr>
+  <tr><td>Puesta en común</td><td>7'</td><td>“¿Qué hito les sirvió más? ¿Qué harían si la micro no pasa?” Conectar con eventos del juego.</td></tr>
+  <tr><td>Cierre</td><td>3'</td><td>Minijuego grupal “¿A quién llamo?” proyectado; tarea: recorrer su ruta real con un adulto usando la lista de hitos.</td></tr>
+</table>
+
+<h2>5. Mapeo con misiones</h2>
+<table>
+  <tr><th>Misión</th><th>Nivel</th><th>Aprendizaje evaluado</th></tr>
+  <tr><td>1. Primer paso: a la plaza</td><td>1</td><td>Lectura del eje Domeyko–General Lagos; brújula cardinal</td></tr>
+  <tr><td>2. Costanera y Mercado Fluvial</td><td>1</td><td>Referencias lineales (costanera, río)</td></tr>
+  <tr><td>3. Cruce a la Isla Teja</td><td>1</td><td>Cruce peatonal seguro en puente Pedro de Valdivia</td></tr>
+  <tr><td>4. Llega a casa</td><td>1–2</td><td>Transferencia a la ruta propia (checkpoints generados sobre calles reales)</td></tr>
+  <tr><td>5. De noche y sin micro</td><td>2</td><td>Gestión de recursos (tiempo, batería), decisiones nocturnas</td></tr>
+</table>
+
+<h2>6. Evaluación sugerida (pre/post)</h2>
+<ol>
+  <li>Nombra tu calle, número y sector sin mirar el celular.</li>
+  <li>Menciona 3 hitos de tu ruta colegio–casa y para qué te sirven.</li>
+  <li>¿A qué número llamas si: ves un incendio / alguien está herido / te robaron?</li>
+  <li>Si suena la alarma de tsunami en el centro de Valdivia, ¿hacia dónde vas y por qué?</li>
+  <li>Explica el protocolo “me perdí” en 4 pasos.</li>
+</ol>
+<p class="sub">Comparar respuestas antes del piloto y tras 3–4 sesiones. El propio juego registra estrellas y % en “Mis Datos” como evidencia complementaria.</p>
+
+<h2>7. Notas de seguridad pedagógica</h2>
+<div class="caja prot">Los eventos (desconocidos, robo, sismo) se presentan con tono tranquilo y empoderador, con explicación posterior de cada opción. Ningún contenido busca asustar: busca automatizar respuestas seguras. Recomendamos avisar al curso antes de jugar la misión nocturna y el evento sísmico.</div>
+
+<h2>8. Privacidad</h2>
+<ul>
+  <li>Sin cuentas, sin servidor, sin analítica: progreso, casa referencial y contactos viven solo en el navegador del estudiante.</li>
+  <li>La “casa” es un punto referencial de barrio, no una dirección exacta.</li>
+  <li>Las consultas de ruta (OSRM) envían solo coordenadas genéricas INSAT → sector; jamás datos personales.</li>
+</ul>
+
+<h2>9. FAQ rápida</h2>
+<table>
+  <tr><td>No carga el mapa</td><td>Verificar conexión o ejecutar la descarga offline de tiles (docs del LEEME del proyecto).</td></tr>
+  <tr><td>No suena la voz</td><td>La voz usa el sintetizador del sistema; activar en ⚙️ y revisar volumen. El juego funciona igual sin voz.</td></tr>
+  <tr><td>¿Puedo agregar hitos o misiones?</td><td>Sí: editar los archivos de <code>juego/js/datos/</code> (JSON-like, sin programar).</td></tr>
+</table>
+
+<p class="sub" style="margin-top:24px">Modo Valdivia · Proyecto educativo · Valdivia, Región de Los Ríos · Mapa © OpenStreetMap contributors</p>
+</div>
+<script>window.addEventListener('afterprint',()=>{});</script>
+</body>
+</html>

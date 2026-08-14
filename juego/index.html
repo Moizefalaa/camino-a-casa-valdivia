@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modo Valdivia</title>
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+<div id="app">
+
+  <header id="cabecera">
+    <button id="btn-inicio" class="logo" title="Inicio">🌉 <span>MODO VALDIVIA</span></button>
+    <nav>
+      <button data-nav="explorar">🗺️ Explora</button>
+      <button data-nav="misiones">🎯 Misiones</button>
+      <button data-nav="datos">📞 Mis Datos</button>
+      <button data-nav="ajustes">⚙️</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="pantalla-inicio" class="pantalla activa">
+      <div class="portada">
+        <div class="titulo">MODO VALDIVIA</div>
+        <div class="lema">Aprende tu ruta. Conoce tu ciudad.</div>
+      </div>
+      <div class="menu-principal">
+        <button class="btn primario" data-nav="explorar">🗺️ Explora Valdivia</button>
+        <button class="btn acento" data-nav="misiones">🎯 Misiones</button>
+        <button class="btn secundario" data-nav="datos">📞 Mis Datos Seguros</button>
+      </div>
+      <div class="progreso-inicio" id="progreso-inicio"></div>
+      <div class="pie-inicio">🔒 Todo se guarda solo en este dispositivo · Sin cuentas · Sin internet</div>
+    </section>
+
+    <section id="pantalla-mapa" class="pantalla">
+      <div id="barra-mapa">
+        <span id="titulo-mapa">Explora Valdivia</span>
+        <span class="capas">
+          <button id="btn-capa-evac" class="capa" title="Rutas de evacuación de tsunami">▲ Evacuación</button>
+          <button id="btn-capa-micro" class="capa" title="Paraderos y recorridos de micro">🚌 Micros</button>
+          <button id="btn-capa-hitos" class="capa activa" title="Hitos de la ciudad">📍 Hitos</button>
+        </span>
+      </div>
+      <div id="mapa"></div>
+      <div id="hud-mision" class="oculto">
+        <div class="fila"><span id="hud-titulo">Misión</span><span id="hud-reloj">⏱ 17:30</span></div>
+        <div class="fila small"><span id="hud-objetivo"></span><span id="hud-recursos"></span></div>
+        <div class="fila small">
+          <span id="hud-brujula"></span>
+          <button id="btn-perdido" class="mini">❓ Me perdí</button>
+          <button id="btn-abandonar" class="mini peligro">✕ Abandonar</button>
+        </div>
+      </div>
+      <div id="panel-misiones" class="oculto">
+        <h3>Misiones</h3>
+        <div id="lista-misiones"></div>
+      </div>
+    </section>
+
+    <section id="pantalla-datos" class="pantalla">
+      <h2>📞 Mis Datos Seguros</h2>
+      <div class="tarjetas-datos">
+        <div class="tarjeta-dato" id="td-llamo">
+          <div class="td-icono">🚨</div>
+          <div class="td-titulo">¿A quién llamo?</div>
+          <div class="td-desc">Escenarios reales: elige el número correcto</div>
+          <button class="btn primario pequeno" id="btn-jugar-llamo">Jugar</button>
+        </div>
+        <div class="tarjeta-dato" id="td-direccion">
+          <div class="td-icono">📮</div>
+          <div class="td-titulo">Arma tu dirección</div>
+          <div class="td-desc">Guarda tu dirección y practícala de memoria</div>
+          <button class="btn primario pequeno" id="btn-jugar-direccion">Practicar</button>
+        </div>
+        <div class="tarjeta-dato" id="td-contactos">
+          <div class="td-icono">🃏</div>
+          <div class="td-titulo">Tarjetas de memoria</div>
+          <div class="td-desc">Guarda tus contactos de confianza y practica parearlos con sus números</div>
+          <button class="btn primario pequeno" id="btn-jugar-contactos">Practicar</button>
+        </div>
+        <div class="tarjeta-dato" id="td-protocolos">
+          <div class="td-icono">📋</div>
+          <div class="td-titulo">Protocolos</div>
+          <div class="td-desc">Ordena los pasos: me perdí · sin batería · terremoto de día y de noche</div>
+          <button class="btn primario pequeno" id="btn-jugar-protocolos">Jugar</button>
+        </div>
+        <div class="tarjeta-dato" id="td-numeros">
+          <div class="td-icono">📋</div>
+          <div class="td-titulo">Números de emergencia</div>
+          <div class="td-desc">131 SAMU · 133 Carabineros · 134 Bomberos · 147 Fono Infancia · 112 Celulares</div>
+        </div>
+      </div>
+      <div id="zona-juego-datos"></div>
+    </section>
+
+    <section id="pantalla-ajustes" class="pantalla">
+      <h2>⚙️ Ajustes</h2>
+      <div class="ajustes-lista">
+        <div class="ajuste"><span>Nivel</span>
+          <span><button class="seg" data-nivel="1">Nivel 1 (13–15)</button><button class="seg" data-nivel="2">Nivel 2 (16–19)</button></span>
+        </div>
+        <div class="ajuste"><span>Colegio</span><b>INSAT · Domeyko 398</b></div>
+        <div class="ajuste"><span>Mi casa (punto referencial)</span>
+          <select id="sel-casa"></select>
+        </div>
+        <div class="ajuste"><span>Radio Estuario (mensajes)</span>
+          <button id="btn-radio" class="seg">🔊 Encendida</button>
+        </div>
+        <div class="ajuste"><span>Personaje narrador (Cuelli)</span>
+          <button id="btn-personaje" class="seg">🦢 Visible</button>
+        </div>
+        <div class="ajuste"><span>Voz del despachador</span>
+          <button id="btn-voz" class="seg">🔇 Apagada</button>
+        </div>
+        <div class="ajuste"><span>Certificado Autonomía Urbana</span>
+          <button id="btn-certificado" class="seg">🖨️ Ver</button>
+        </div>
+        <div class="ajuste"><span>Reiniciar progreso</span>
+          <button id="btn-reset" class="seg peligro">Borrar todo</button>
+        </div>
+      </div>
+      <h3>🏺 Galería Valdivia</h3>
+      <div id="galeria" class="galeria"></div>
+      <div class="nota-privacidad">🔒 Tus datos (casa, contactos, progreso) se guardan solo en este dispositivo (localStorage) y nunca se envían a internet.</div>
+    </section>
+  </main>
+
+  <div id="narrador" class="oculto">
+    <div id="globo">
+      <b>RADIO ESTUARIO · CUPELLI AL AIRE</b>
+      <span id="globo-msj"></span>
+    </div>
+    <div id="personaje" aria-hidden="true">
+      <svg viewBox="0 0 150 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cuelli, cisne despachador de Radio Estuario">
+        <ellipse cx="74" cy="152" rx="36" ry="5" fill="rgba(0,0,0,0.14)"/>
+        <ellipse cx="72" cy="122" rx="40" ry="27" fill="#fafaf7" stroke="#1a2b3c" stroke-width="3.5"/>
+        <path d="M52 122 q18 -18 44 -6 q-6 18 -28 18 q-13 -1 -16 -12 z" fill="#e8e8e2" stroke="#1a2b3c" stroke-width="3"/>
+        <path d="M56 104 C 50 76 54 54 70 38" fill="none" stroke="#1a2b3c" stroke-width="19" stroke-linecap="round"/>
+        <circle cx="72" cy="36" r="19" fill="#1a2b3c"/>
+        <path d="M62 29 q9 -7 19 -2" fill="none" stroke="#f5f5f2" stroke-width="3.5" stroke-linecap="round"/>
+        <g class="ojo">
+          <circle cx="77" cy="33" r="5" fill="#fff"/>
+          <circle cx="78.5" cy="33.5" r="2.4" fill="#101418"/>
+        </g>
+        <circle cx="89" cy="42" r="5.5" fill="#d94f3d" stroke="#1a2b3c" stroke-width="2"/>
+        <path d="M92 36 q18 2 24 8 q-10 5 -24 2 z" fill="#e9b32a" stroke="#1a2b3c" stroke-width="2.5" stroke-linejoin="round"/>
+        <path class="pico-inf" d="M92 45 q12 5 19 4 q-6 7 -17 3 z" fill="#d9973f" stroke="#1a2b3c" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M55 31 A 19 19 0 0 1 89 29" fill="none" stroke="#d97b3f" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="55" cy="33" r="6" fill="#d97b3f" stroke="#1a2b3c" stroke-width="2"/>
+        <path d="M56 39 C 60 52 70 56 80 54" fill="none" stroke="#d97b3f" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="82" cy="54" r="4" fill="#1a2b3c"/>
+      </svg>
+    </div>
+  </div>
+
+  <div id="modal-fondo" class="oculto">
+    <div id="modal"></div>
+  </div>
+
+  <div id="brindis" class="oculto"></div>
+</div>
+
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="js/datos/hitos.js"></script>
+<script src="js/datos/evacuacion.js"></script>
+<script src="js/datos/misiones.js"></script>
+<script src="js/datos/emergencias.js"></script>
+<script src="js/datos/galeria.js"></script>
+<script src="js/despachador.js"></script>
+<script src="js/mapa.js"></script>
+<script src="js/explorar.js"></script>
+<script src="js/mision.js"></script>
+<script src="js/datos-seguros.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
