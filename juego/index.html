@@ -96,6 +96,25 @@
       <div id="zona-juego-datos"></div>
     </section>
 
+    <section id="pantalla-panel" class="pantalla">
+      <h2>📊 Panel docente</h2>
+      <div class="panel-import">
+        <h3>Importar códigos de estudiantes</h3>
+        <p class="nota-panel">Pega los códigos que los estudiantes exporten desde ⚙️ → «Exportar mi progreso». Uno por línea. No contienen nombres ni datos personales: solo un identificador anónimo.</p>
+        <textarea id="ta-codigos" class="campo ta-codigos" placeholder="MV1 eyJ2IjoxLCJpZCI6...&#10;MV1 eyJ2IjoxLCJpZCI6..."></textarea>
+        <div class="fila-botones">
+          <button class="btn primario pequeno" id="btn-importar">Agregar códigos</button>
+          <button class="btn secundario pequeno" id="btn-vaciar-panel" >Vaciar panel</button>
+        </div>
+      </div>
+      <div id="panel-resumen" class="oculto"></div>
+      <div class="fila-botones">
+        <button class="btn secundario pequeno oculto" id="btn-csv">⬇ Descargar CSV</button>
+        <button class="btn secundario pequeno oculto" id="btn-informe">🖨️ Informe imprimible</button>
+        <button class="btn secundario pequeno" id="btn-salir-panel">← Volver al juego</button>
+      </div>
+    </section>
+
     <section id="pantalla-ajustes" class="pantalla">
       <h2>⚙️ Ajustes</h2>
       <div class="ajustes-lista">
@@ -117,6 +136,12 @@
         </div>
         <div class="ajuste"><span>Certificado Autonomía Urbana</span>
           <button id="btn-certificado" class="seg">🖨️ Ver</button>
+        </div>
+        <div class="ajuste"><span>Exportar mi progreso</span>
+          <button id="btn-exportar" class="seg">📋 Código</button>
+        </div>
+        <div class="ajuste"><span>Panel docente</span>
+          <button id="btn-panel-doc" class="seg">📊 Abrir</button>
         </div>
         <div class="ajuste"><span>Reiniciar progreso</span>
           <button id="btn-reset" class="seg peligro">Borrar todo</button>
@@ -175,6 +200,7 @@
 <script src="js/explorar.js"></script>
 <script src="js/mision.js"></script>
 <script src="js/datos-seguros.js"></script>
+<script src="js/panel-docente.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

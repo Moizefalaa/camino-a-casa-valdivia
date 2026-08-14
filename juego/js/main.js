@@ -49,7 +49,7 @@ function brindis(msj) {
 }
 
 const UI = (() => {
-  const PANTALLAS = ["inicio", "mapa", "datos", "ajustes"];
+  const PANTALLAS = ["inicio", "mapa", "datos", "ajustes", "panel"];
 
   function navegar(destino) {
     const pantalla = (destino === "explorar" || destino === "misiones") ? "mapa" : destino;

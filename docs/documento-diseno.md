@@ -177,7 +177,7 @@ Diseñadas para 13–19, tono realista sin sensacionalismo; validar con equipo e
 
 | Rol | Funciones |
 |---|---|
-| **Docente** | Elegir nivel del curso, ver avance agregado (sin datos individuales en el MVP), usar en clases de orientación |
+| **Docente** | Panel docente anónimo (⚙️ → Panel docente, tras puerta de suma): cada estudiante exporta un código `MV1 …` sin datos personales; el docente los importa y obtiene métricas del curso (misiones, estrellas, quiz de emergencias, contactos, galería), tabla por ID anónimo, CSV e informe imprimible. Sin servidor: los códigos viajan a mano o por el medio que el colegio estime |
 | **Apoderado** | Hoja de consejos para practicar el recorrido real con el adolescente; opcionalmente co-configurar contactos |
 | **Estudiantes INSAT** | El piloto es con un liceo técnico profesional: estudiantes de Conectividad/Administración pueden colaborar en contenido, testing y datos del mapa (aprendizaje servicio) |
 
