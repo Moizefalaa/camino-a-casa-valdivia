@@ -56,6 +56,7 @@ Sin cuentas, sin servidor, sin analítica. Todo (progreso, casa referencial, dir
 - [x] Módulo Mis Datos Seguros completo: ¿A quién llamo? · Arma tu dirección · **Tarjetas de memoria (contactos)** · **Protocolos (4 simulacros ordenables)**
 - [x] Radio Estuario con **Cuelli**: narrador animado (cisne de cuello negro, SVG original de libre uso) que flota, parpadea y mueve el pico sincronizado con la voz TTS (Web Speech API del navegador, gratis). Tres ajustes: mensajes, personaje y voz.
 - [x] Galería Valdivia (8 piezas culturales) + certificado imprimible
+- [x] **Micros reales**: 5 líneas en `js/datos/micros.js` — Línea 20 Niebla⇄Valdivia (39 paradas, recorrido real OSM) + 4 corredores referenciales (Picarte, Las Ánimas, Guacamayo, Collico) trazados sobre paraderos reales, marcados "validar INSAT". Al abordar eliges la línea por nombre y te baja en la parada más cercana a tu destino. Regenerar/corregir: `python herramientas/generar-micros.py` o editar el JS a mano.
 - [x] Guía docente imprimible (`docs/guia-docente.html`) para el piloto INSAT
-- [ ] Recorridos reales de micro (los paraderos son demo) — pendiente levantamiento
+- [ ] Corredores referenciales de micro validados en terreno (tarea Fase 0 con INSAT)
 - [ ] Routing peatonal local propio (OSRM demo usa perfil auto; para offline total, servidor OSRM local — Fase 2)

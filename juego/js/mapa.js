@@ -70,10 +70,16 @@ const MapaValdivia = (() => {
   }
 
   function _poblarMicros() {
-    PARADEROS.forEach(p => {
-      L.circleMarker(p.coords, { radius: 6, color: "#d97b3f", fillColor: "#f5c9a8", fillOpacity: 1, weight: 2 })
-        .bindPopup(`<b>🚌 ${p.nombre}</b>`)
+    MICROS.forEach(linea => {
+      const coords = linea.paradas.map(p => p.coords);
+      L.polyline(coords, { color: linea.color, weight: 3.5, opacity: 0.75, dashArray: "6 6" })
+        .bindPopup(`<b>🚌 ${linea.ref ? "Línea " + linea.ref + " · " : ""}${linea.nombre}</b><br><i style="color:#889">${linea.nota}</i>`)
         .addTo(capaMicros);
+      linea.paradas.forEach(p => {
+        L.circleMarker(p.coords, { radius: 3.5, color: linea.color, fillColor: "#fff", fillOpacity: 1, weight: 2 })
+          .bindPopup(`<b>🚌 ${linea.ref ? "Línea " + linea.ref : linea.nombre}</b><br>${p.nombre}<br><i style="color:#889">${linea.nota}</i>`)
+          .addTo(capaMicros);
+      });
     });
   }
 

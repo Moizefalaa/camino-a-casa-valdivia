@@ -248,9 +248,22 @@ const Mision = (() => {
     mostrarDecision(cp, ops);
   }
 
+  function microsEnZona(coords) {
+    const opciones = [];
+    MICROS.forEach(linea => {
+      let mejor = null, d = 0.28;
+      linea.paradas.forEach(p => {
+        const k = distKm(coords, p.coords);
+        if (k < d) { d = k; mejor = p; }
+      });
+      if (mejor) opciones.push({ linea, paradaSubida: mejor });
+    });
+    return opciones;
+  }
+
   function mostrarDecision(cp, ops) {
     const claves = Object.keys(ops.opciones).sort(() => Math.random() - 0.5);
-    const paradero = PARADEROS.find(p => distKm(p.coords, cp.coords) < 0.25);
+    const micros = estado.saldo >= 400 ? microsEnZona(cp.coords) : [];
     let html = `
       <div class="modal-categoria">DECISIÓN ${estado.paso + 1}/${estado.cps.length}</div>
       <div class="modal-titulo" style="font-size:15px">${cp.texto}</div>
@@ -265,13 +278,19 @@ const Mision = (() => {
       b.onclick = () => responder(k === ops.correcta, k, siguienteCoord());
       cont.appendChild(b);
     });
-    if (paradero && estado.saldo >= 400 && estado.paso + 2 <= estado.cps.length) {
+    micros.slice(0, 2).forEach(m => {
       const b = document.createElement("button");
       b.className = "opcion";
-      b.style.borderColor = "#d97b3f";
-      b.textContent = `🚌 Tomar la micro en ${paradero.nombre} (–$400, avanzas rápido)`;
-      b.onclick = () => tomarMicro();
+      b.style.borderColor = m.linea.color;
+      b.textContent = `🚌 ${m.linea.ref ? "Línea " + m.linea.ref + " — " + m.linea.nombre : m.linea.nombre} (subes en ${m.paradaSubida.nombre}; –$400)`;
+      b.onclick = () => tomarMicro(m);
       cont.appendChild(b);
+    });
+    if (micros.length) {
+      const nota = document.createElement("div");
+      nota.style.cssText = "font-size:11px;color:#889;margin-top:6px";
+      nota.textContent = "La micro te baja en la parada de esa línea más cercana a tu destino.";
+      cont.appendChild(nota);
     }
     FONDO.classList.remove("oculto");
   }
@@ -321,14 +340,29 @@ const Mision = (() => {
     return Math.max(2, Math.round(distKm(cp.coords, objetivo) * 13));
   }
 
-  function tomarMicro() {
+  function tomarMicro(m) {
+    const linea = m.linea;
+    let paradaBajada = null, dMin = Infinity;
+    linea.paradas.forEach(p => {
+      const k = distKm(p.coords, estado.destino);
+      if (k < dMin) { dMin = k; paradaBajada = p; }
+    });
+    const viajados = distKm(m.paradaSubida.coords, paradaBajada.coords);
     estado.saldo -= 400;
-    estado.reloj += 4;
-    estado.paso = Math.min(estado.cps.length, estado.paso + 2);
-    estado.pos = estado.paso >= estado.cps.length ? estado.destino : estado.cps[estado.paso].coords;
+    estado.reloj += 3 + Math.round(viajados * 4);
+    estado.pos = paradaBajada.coords;
+
+    const cercanos = estado.cps
+      .map((c, i) => ({ i, d: distKm(c.coords, estado.pos) }))
+      .filter(x => x.d < 0.2);
+    if (dMin < 0.35) estado.paso = estado.cps.length;
+    else if (cercanos.length) estado.paso = Math.max(estado.paso, cercanos[cercanos.length - 1].i + 1);
+    else estado.paso = Math.min(estado.cps.length, estado.paso + 2);
+
     estado.historial.push(estado.pos);
     FONDO.classList.add("oculto");
-    brindis("🚌 Micro tomada: avanzaste rápido");
+    brindis(`🚌 ${linea.ref ? "Línea " + linea.ref : linea.nombre}: bajaste en ${paradaBajada.nombre}`);
+    Despachador.decir(`Micro tomada: te dejamos en ${paradaBajada.nombre}. Ojo con tu saldo.`);
     MapaValdivia.jugador(estado.pos);
     actualizarHUD();
     setTimeout(() => preguntar(), 500);

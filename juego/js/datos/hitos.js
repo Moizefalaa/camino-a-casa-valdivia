@@ -156,12 +156,3 @@ const SECTORES_CASA = [
   { id: "cruces", nombre: "Cruces", coords: [-39.8550, -73.2550] }
 ];
 
-const PARADEROS = [
-  { nombre: "Paradero Domeyko / INSAT", coords: [-39.8248, -73.2463] },
-  { nombre: "Paradero General Lagos", coords: [-39.8185, -73.2460] },
-  { nombre: "Paradero Plaza de Armas", coords: [-39.8147, -73.2450] },
-  { nombre: "Paradero Costanera / Mercado", coords: [-39.8124, -73.2480] },
-  { nombre: "Paradero Picarte", coords: [-39.8300, -73.2435] },
-  { nombre: "Paradero Terminal", coords: [-39.8220, -73.2418] },
-  { nombre: "Paradero Isla Teja / UACh", coords: [-39.8065, -73.2500] }
-];
