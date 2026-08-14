@@ -123,7 +123,47 @@ const MISIONES = [
     checkpoints: null,
     nocturna: true,
     bateriaInicial: 5
+  },
+  {
+    id: "m6-calle-calle",
+    nombre: "Puente Calle-Calle al sur",
+    nivel: 1,
+    desc: "Cruza hacia el sur de la ciudad rumbo a Las Ánimas: nuevo puente, nuevas calles.",
+    destino: [-39.8340, -73.2330],
+    destinoNombre: "Las Ánimas · Av. Argentina",
+    limiteMin: 45,
+    checkpoints: null
+  },
+  {
+    id: "m7-turista",
+    nombre: "La ruta del turista",
+    nivel: 1,
+    desc: "Recorrido cultural: del colegio al centro por la costanera, hasta el Torreón Los Canelos.",
+    destino: [-39.81774, -73.24864],
+    destinoNombre: "Torreón Los Canelos",
+    limiteMin: 45,
+    checkpoints: null
+  },
+  {
+    id: "m8-evacuacion",
+    nombre: "1960: evacuación",
+    nivel: 2,
+    desc: "Sirenas en la ciudad: terremoto y alarma de tsunami. Desde la plaza, llega a terreno alto en Collico. El reloj corre como en el 60.",
+    origen: [-39.81429, -73.24592],
+    destino: [-39.8165, -73.2585],
+    destinoNombre: "Zona alta de Collico",
+    limiteMin: 15,
+    checkpoints: null,
+    eventoInicial: "tsunami"
   }
+];
+
+const DESAFIOS_SEMANALES = [
+  { id: "contrarreloj", nombre: "Contrarreloj", desc: "El reloj apremia: tienes apenas un poco más de la mitad del tiempo habitual para llegar.", mod: { limiteFactor: 0.55 } },
+  { id: "sin-un-peso", nombre: "Sin un peso", desc: "Sin saldo: ni micro ni favores. Solo tus piernas y tu mapa mental.", mod: { saldoInicial: 0 } },
+  { id: "a-pie-oscuras", nombre: "A pie y a oscuras", desc: "De noche y sin un peso: veredas iluminadas y rutas conocidas.", mod: { nocturna: true, saldoInicial: 0 } },
+  { id: "sin-brujula", nombre: "Sin brújula", desc: "Nada de ayudas: ni flechas ni brújula. Solo hitos y memoria.", mod: { sinBrujula: true } },
+  { id: "partida-sorpresa", nombre: "Partida sorpresa", desc: "Empiezas en un hito al azar de la ciudad y debes llegar a tu casa.", mod: {} }
 ];
 
 const EVENTOS = [
@@ -290,6 +330,30 @@ const EVENTOS = [
       { texto: "Pegarse a la fachada para protegerse de cosas que caen", correcta: false, porque: "Las fachadas son justo lo que cae: aléjate hacia la calzada o zona abierta." },
       { texto: "Alejarse de fachadas y vidrios, zona abierta, y luego continuar evaluando el entorno", correcta: true, porque: "Correcto: en réplicas manda la distancia de fachadas, letreros y vidrios." },
       { texto: "Entrar al edificio más cercano a refugiarse", correcta: false, porque: "Estás más seguro afuera, lejos de estructuras: no entres a edificios durante una réplica." }
+    ]
+  },
+  {
+    id: "cadena",
+    etiqueta: "⚠ EVENTO BICI",
+    titulo: "La cadena se sale",
+    texto: "En plena subida la cadena se sale. Mitad grasa, mitad aprendizaje.",
+    solo: "bici",
+    opciones: [
+      { texto: "Frenar en un lugar seguro al costado y volver a ponerla con calma", correcta: true, porque: "Correcto: fuera de la calzada y sin apuro. Una cadena se repone en minutos." },
+      { texto: "Seguir pedaleando con la cadena trabada", correcta: false, porque: "Puedes dañar la bici y caer: detente siempre en un lugar seguro." },
+      { texto: "Dejar la bici botada y seguir a pie de mal humor", correcta: false, porque: "La bici es tu herramienta de autonomía: cuidarla también es parte del camino." }
+    ]
+  },
+  {
+    id: "ciclovia",
+    etiqueta: "⚠ SEGURIDAD VIAL · BICI",
+    titulo: "¿Por dónde pedaleas?",
+    texto: "La calle no tiene ciclovía y a la derecha hay autos estacionando en fila.",
+    solo: "bici",
+    opciones: [
+      { texto: "Por la vereda, despacio, cediendo el paso a los peatones", correcta: true, porque: "Correcto: sin ciclovía, vereda a paso humano y cediendo siempre. Predecible y visible." },
+      { texto: "Zigzag entre los autos estacionados", correcta: false, porque: "Puertas que se abren y autos que no te ven: elige un trazado donde te esperen." },
+      { texto: "Contramano, así no hay autos de frente", correcta: false, porque: "Contramano es de lo más peligroso: nadie espera un ciclista viniendo de donde no corresponde." }
     ]
   }
 ];

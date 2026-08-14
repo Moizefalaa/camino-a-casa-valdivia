@@ -99,6 +99,7 @@ main { flex: 1; position: relative; overflow: hidden; }
 .mision-item b { display: block; font-size: 13.5px; }
 .mision-item .desc { color: #667; margin: 4px 0 8px; }
 .mision-item .estrellas { color: var(--oro); letter-spacing: 2px; }
+.mision-item.desafio { border: 2px solid var(--oro); background: #fffdf3; }
 
 .pin-hito {
   width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg);

@@ -129,6 +129,24 @@ const Mision = (() => {
   function renderLista() {
     const lista = document.getElementById("lista-misiones");
     lista.innerHTML = "";
+    const d = desafioSemanal();
+    const idDes = "desafio-" + d.key;
+    const hecho = Estado.progreso.misiones[idDes];
+    const card = document.createElement("div");
+    card.className = "mision-item desafio";
+    card.innerHTML = `
+      <b>⚔️ Desafío de la semana · ${d.tipo.nombre}</b>
+      <div class="desc">${d.tipo.desc} → <b>${d.destinoNombre}</b></div>
+      <div class="estrellas">${hecho ? "★".repeat(hecho.estrellas) + "☆".repeat(3 - hecho.estrellas) : "NUEVO ☆☆☆"}</div>
+    `;
+    const btnDes = document.createElement("button");
+    btnDes.className = "btn acento pequeno";
+    btnDes.style.width = "100%";
+    btnDes.textContent = hecho ? "Repetir desafío" : "Aceptar desafío";
+    btnDes.onclick = () => comenzarDesafio(d, idDes);
+    card.appendChild(btnDes);
+    lista.appendChild(card);
+
     MISIONES.forEach(m => {
       const bloqueada = m.nivel === 2 && Estado.perfil.nivel < 2;
       const prog = Estado.progreso.misiones[m.id];
@@ -164,7 +182,7 @@ const Mision = (() => {
       destino = casa.coords;
       destinoNombre = `${casa.nombre} (tu casa)`;
     }
-    const origen = HITOS.find(h => h.id === "insat").coords;
+    const origen = m.origen || HITOS.find(h => h.id === "insat").coords;
     let cps = m.checkpoints && m.checkpoints.length ? m.checkpoints.filter(c => c.coords) : null;
     let trayecto = [origen, ...(cps ? cps.map(c => c.coords) : []), destino];
 
@@ -183,6 +201,34 @@ const Mision = (() => {
       }
     }
 
+    if (m.sinBici) {
+      iniciarEstado(m, origen, destino, destinoNombre, cps, trayecto, "pie");
+      return;
+    }
+    elegirMedio(medio => iniciarEstado(m, origen, destino, destinoNombre, cps, trayecto, medio));
+  }
+
+  function elegirMedio(cb) {
+    MODAL.innerHTML = `
+      <div class="modal-categoria">¿CÓMO TE MUEVES HOY?</div>
+      <div class="modal-titulo" style="font-size:15px">Elige tu medio</div>
+      <div id="medio-ops"></div>
+    `;
+    const cont = document.getElementById("medio-ops");
+    [
+      { id: "pie", emoji: "🚶", t: "Caminando", d: "100% control: llegas cuando llegues (~13 min/km)." },
+      { id: "bici", emoji: "🚲", t: "En bici", d: "Mucho más rápido (~4,5 min/km). Ojo con la cadena y la ciclovía." }
+    ].forEach(o => {
+      const b = document.createElement("button");
+      b.className = "opcion";
+      b.innerHTML = `<b>${o.emoji} ${o.t}</b><br><span style="font-size:12px;color:#778">${o.d}</span>`;
+      b.onclick = () => { FONDO.classList.add("oculto"); cb(o.id); };
+      cont.appendChild(b);
+    });
+    FONDO.classList.remove("oculto");
+  }
+
+  function iniciarEstado(m, origen, destino, destinoNombre, cps, trayecto, medio) {
     document.getElementById("pantalla-mapa").classList.toggle("nocturna", !!m.nocturna);
     MapaValdivia.destino(destino, destinoNombre);
     estado = {
@@ -191,10 +237,11 @@ const Mision = (() => {
       paso: 0,
       pos: origen,
       destino, destinoNombre,
+      medio,
       reloj: m.nocturna ? 21 * 60 + 15 : 17 * 60 + 30,
       relojInicio: m.nocturna ? 21 * 60 + 15 : 17 * 60 + 30,
       errores: 0,
-      saldo: m.nivel === 2 ? 1200 : 1600,
+      saldo: m.saldoInicial !== undefined ? m.saldoInicial : (m.nivel === 2 ? 1200 : 1600),
       bateria: m.bateriaInicial || (m.nivel === 2 ? 40 : 100),
       eventosUsados: 0,
       historial: [origen],
@@ -206,10 +253,12 @@ const Mision = (() => {
     document.getElementById("hud-titulo").textContent = m.nombre + (m.nocturna ? " 🌙" : "");
     document.getElementById("hud-objetivo").textContent = `→ ${destinoNombre}`;
     MapaValdivia.iniciar();
-    MapaValdivia.jugador(estado.pos);
+    MapaValdivia.jugador(estado.pos, medio);
     MapaValdivia.ruta(trayecto);
-    Despachador.decir(m.nocturna
-      ? "De noche y sin micro: rutas conocidas, veredas iluminadas y el celular a duras penas. Vamos con calma."
+    Despachador.decir(
+      m.eventoInicial ? "Sirenas en toda la ciudad. Actúa como si fuera real: terreno alto, ya."
+      : m.nocturna ? "De noche y sin micro: rutas conocidas, veredas iluminadas y el celular a duras penas. Vamos con calma."
+      : medio === "bici" ? "En bici: por la ciclovía cuando exista, luces encendidas y trazado predecible. Adelante."
       : MENSAJES_RADIO.misionInicio);
     actualizarHUD();
     setTimeout(() => preguntar(), 600);
@@ -219,9 +268,9 @@ const Mision = (() => {
     if (!estado) return;
     const h = Math.floor(estado.reloj / 60), mn = estado.reloj % 60;
     document.getElementById("hud-reloj").textContent = `⏱ ${String(h).padStart(2,"0")}:${String(mn).padStart(2,"0")}`;
-    document.getElementById("hud-recursos").textContent = `🎫 $${estado.saldo} · 🔋 ${estado.bateria}%`;
+    document.getElementById("hud-recursos").textContent = `${estado.medio === "bici" ? "🚲 " : ""}🎫 $${estado.saldo} · 🔋 ${estado.bateria}%`;
     const brujula = document.getElementById("hud-brujula");
-    if (Estado.perfil.nivel === 1 && !estado.terminada) {
+    if (Estado.perfil.nivel === 1 && !estado.terminada && !estado.m.sinBrujula) {
       const objetivo = estado.paso < estado.cps.length ? estado.cps[estado.paso].coords : estado.destino;
       const dir = rumbo(estado.pos, objetivo);
       brujula.textContent = `🧭 ${dir}`;
@@ -238,6 +287,12 @@ const Mision = (() => {
     const ops = cp.opciones ? { correcta: cp.correcta, opciones: cp.opciones } : opcionesPara(cp, siguiente);
 
     const umbrales = [Math.floor(estado.cps.length / 3), Math.floor(2 * estado.cps.length / 3)];
+    if (estado.m.eventoInicial && estado.paso === 0 && estado.eventosUsados === 0) {
+      estado.eventosUsados++;
+      Despachador.decir(MENSAJES_RADIO.misionEvento);
+      lanzarEvento(() => mostrarDecision(cp, ops), estado.m.eventoInicial);
+      return;
+    }
     const conEvento = estado.eventosUsados < umbrales.length && estado.paso === umbrales[estado.eventosUsados];
     if (conEvento) {
       estado.eventosUsados++;
@@ -307,7 +362,7 @@ const Mision = (() => {
       estado.reloj += minutosPaso();
       if (Estado.perfil.nivel === 2) estado.bateria = Math.max(0, estado.bateria - 3);
       estado.paso++;
-      MapaValdivia.jugador(estado.pos);
+      MapaValdivia.jugador(estado.pos, estado.medio);
       FONDO.classList.add("oculto");
       Despachador.decir(MENSAJES_RADIO.misionOk);
       actualizarHUD();
@@ -317,7 +372,7 @@ const Mision = (() => {
       estado.reloj += 6;
       if (Estado.perfil.nivel === 2) estado.bateria = Math.max(0, estado.bateria - 4);
       const fuera = desplazar(estado.pos, 0.09, dir);
-      MapaValdivia.jugador(fuera);
+      MapaValdivia.jugador(fuera, estado.medio);
       MODAL.innerHTML = `
         <div class="modal-categoria">RUMBO EQUIVOCADO</div>
         <div class="modal-titulo" style="font-size:15px">Ese no es el camino</div>
@@ -326,7 +381,7 @@ const Mision = (() => {
         <button class="btn secundario pequeno" id="reintentar" style="width:100%">Volver a la esquina</button>
       `;
       document.getElementById("reintentar").onclick = () => {
-        MapaValdivia.jugador(estado.pos);
+        MapaValdivia.jugador(estado.pos, estado.medio);
         actualizarHUD();
         preguntar();
       };
@@ -337,7 +392,8 @@ const Mision = (() => {
   function minutosPaso() {
     const cp = estado.cps[estado.paso];
     const objetivo = siguienteCoord();
-    return Math.max(2, Math.round(distKm(cp.coords, objetivo) * 13));
+    const vel = estado.medio === "bici" ? 4.5 : 13;
+    return Math.max(estado.medio === "bici" ? 1 : 2, Math.round(distKm(cp.coords, objetivo) * vel));
   }
 
   function tomarMicro(m) {
@@ -363,15 +419,21 @@ const Mision = (() => {
     FONDO.classList.add("oculto");
     brindis(`🚌 ${linea.ref ? "Línea " + linea.ref : linea.nombre}: bajaste en ${paradaBajada.nombre}`);
     Despachador.decir(`Micro tomada: te dejamos en ${paradaBajada.nombre}. Ojo con tu saldo.`);
-    MapaValdivia.jugador(estado.pos);
+    MapaValdivia.jugador(estado.pos, "pie");
     actualizarHUD();
     setTimeout(() => preguntar(), 500);
   }
 
-  function lanzarEvento(alTerminar) {
+  function lanzarEvento(alTerminar, idForzado) {
     const vistos = estado.eventosVistos || (estado.eventosVistos = []);
-    const pool = EVENTOS.filter(e => !vistos.includes(e.id));
-    const ev = pool[Math.floor(Math.random() * pool.length)];
+    const pool = EVENTOS.filter(e => !vistos.includes(e.id) && (!e.solo || e.solo === estado.medio));
+    let ev;
+    if (idForzado) {
+      ev = EVENTOS.find(e => e.id === idForzado);
+    } else {
+      ev = pool[Math.floor(Math.random() * pool.length)];
+    }
+    if (!ev) { alTerminar(); return; }
     vistos.push(ev.id);
     MODAL.innerHTML = `
       <div class="modal-categoria">${ev.etiqueta}</div>
@@ -444,7 +506,7 @@ const Mision = (() => {
     estado.terminada = true;
     document.getElementById("pantalla-mapa").classList.remove("nocturna");
     const relojFinal = estado.reloj;
-    const limiteAbs = estado.relojInicio + estado.mision.limiteMin;
+    const limiteAbs = estado.relojInicio + Math.round(estado.mision.limiteMin * (estado.mision.limiteFactor || 1));
     const aTiempo = relojFinal <= limiteAbs;
     let estrellas = 1;
     if (estado.errores === 0 && aTiempo) estrellas = 3;
@@ -468,6 +530,37 @@ const Mision = (() => {
     `;
     FONDO.classList.remove("oculto");
     document.getElementById("m-otra").onclick = () => { FONDO.classList.add("oculto"); abrirPanel(); };
+  }
+
+  function desafioSemanal() {
+    const hoy = new Date();
+    const ini = new Date(hoy.getFullYear(), 0, 1);
+    const semana = Math.ceil((((hoy - ini) / 86400000) + ini.getDay() + 1) / 7);
+    const tipo = DESAFIOS_SEMANALES[semana % DESAFIOS_SEMANALES.length];
+    const casa = Estado.casaActual();
+    return {
+      key: hoy.getFullYear() + "-S" + semana,
+      tipo,
+      destino: casa ? casa.coords : [-39.81429, -73.24592],
+      destinoNombre: casa ? casa.nombre + " (tu casa)" : "Plaza de la República"
+    };
+  }
+
+  function comenzarDesafio(d, idDes) {
+    const m = Object.assign({
+      id: idDes,
+      nombre: "⚔️ Desafío: " + d.tipo.nombre,
+      desc: d.tipo.desc,
+      nivel: Estado.perfil.nivel,
+      destino: d.destino,
+      destinoNombre: d.destinoNombre,
+      limiteMin: 45
+    }, d.tipo.mod || {});
+    if (d.tipo.id === "partida-sorpresa") {
+      const otros = HITOS.filter(h => h.id !== "insat");
+      m.origen = otros[Math.floor(Math.random() * otros.length)].coords;
+    }
+    comenzar(m);
   }
 
   function activar() { abrirPanel(); }

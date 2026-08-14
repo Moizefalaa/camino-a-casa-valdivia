@@ -96,15 +96,17 @@ const MapaValdivia = (() => {
     mapa.setView(coords, zoom || mapa.getZoom(), { animate: true });
   }
 
-  function jugador(coords) {
+  function jugador(coords, medio) {
     if (!mapa) return;
+    const emoji = medio === "bici" ? "🚴" : "🚶";
     if (!marcadorJugador) {
       marcadorJugador = L.marker(coords, {
-        icon: L.divIcon({ className: "", html: `<div class="pin-hito pin-jugador"><span>🚶</span></div>`, iconSize: [30, 30], iconAnchor: [15, 28] }),
+        icon: L.divIcon({ className: "", html: `<div class="pin-hito pin-jugador"><span>${emoji}</span></div>`, iconSize: [30, 30], iconAnchor: [15, 28] }),
         zIndexOffset: 1000
       }).addTo(mapa);
     } else {
       marcadorJugador.setLatLng(coords);
+      marcadorJugador.setIcon(L.divIcon({ className: "", html: `<div class="pin-hito pin-jugador"><span>${emoji}</span></div>`, iconSize: [30, 30], iconAnchor: [15, 28] }));
     }
     mapa.panTo(coords);
   }
