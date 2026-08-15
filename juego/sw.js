@@ -5,7 +5,7 @@
    - Resto del mismo origen: network-first (frescura en línea) con respaldo
      en caché (funciona offline tras la primera visita).
    - Peticiones cruzadas (OSRM, tiles online de OSM): se dejan pasar. */
-const VERSION = "mv-v1";
+const VERSION = "mv-v2";
 const CACHE = "modo-valdivia-" + VERSION;
 
 const PRECACHE = [

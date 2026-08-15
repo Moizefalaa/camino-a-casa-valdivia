@@ -7,8 +7,8 @@ const Estado = (() => {
   function cargar(clave, porDefecto) {
     try {
       const v = JSON.parse(localStorage.getItem(clave));
-      return v ? Object.assign({}, porDefect, v) : { ...porDefect };
-    } catch (e) { return { ...porDefect }; }
+      return v ? Object.assign({}, porDefecto, v) : { ...porDefecto };
+    } catch (e) { return { ...porDefecto }; }
   }
 
   function guardar() {
@@ -47,6 +47,15 @@ function brindis(msj) {
   clearTimeout(brindis._t);
   brindis._t = setTimeout(() => b.classList.add("oculto"), 2600);
 }
+
+window.addEventListener("error", (e) => {
+  const b = document.getElementById("brindis");
+  if (!b) return;
+  b.textContent = "⚠ Error técnico: " + (e.message || "desconocido");
+  b.style.background = "#c0524f";
+  b.classList.remove("oculto");
+  setTimeout(() => { b.classList.add("oculto"); b.style.background = ""; }, 6000);
+});
 
 const UI = (() => {
   const PANTALLAS = ["inicio", "mapa", "datos", "ajustes", "panel"];
